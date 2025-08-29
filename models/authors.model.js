@@ -1,29 +1,29 @@
-const queries = require('../queries/entries.queries');
+const queries = require('../queries/authors.queries');
 
 const pool = require('../config/db_pgsql');
 
-// GET
-const getEntriesByEmail = async (email) => {
+// GET 
+const getAuthorByEmail = async (email) => {
     let client, result;
     try{
-        client = await pool.connect(); // Abrir la conexion
-        const data = await client.query(queries.getEntriesByEmail, [email])
+        client = await pool.connect();
+        const data = await client.query(queries.getAuthorByEmail, [email])
         result = data.rows
     } catch (err) {
         console.log(err);
         throw err;
     } finally {
         client.release();
-    }
+    } 
     return result
 }
 
 // GET
-const getALLEntries = async () => {
+const getAllAuthors = async () => {
     let client, result;
     try{
         client = await pool.connect();
-        const data = await client.query(queries.getALLEntries)
+        const data = await client.query(queries.getAllAuthors)
         result = data.rows
     } catch (err) {
         console.log(err);
@@ -35,12 +35,12 @@ const getALLEntries = async () => {
 }
 
 // CREATE
-const createEntry = async (entry) => {
-    const {title, content, email, category} = entry;
+const createAuthor = async (author) => {
+    const {name, surname, email, image} = author;
     let client, result;
-    try {
+    try{
         client = await pool.connect();
-        const data = await client.query(queries.createEntry, [title, content, email, category])
+        const data = await client.query(queries.createAuthor, [name, surname, email, image])
         result = data.rowCount
     } catch (err) {
         console.log(err);
@@ -52,12 +52,12 @@ const createEntry = async (entry) => {
 }
 
 // UPDATE
-const updateEntry = async (entry) => {
-    const {oldTitle, newTitle, content, email, category} = entry;
+const updateAuthor = async (author) => {
+    const {oldEmail, name, surname, newEmail, image} = author;
     let client, result;
     try{
         client = await pool.connect();
-        const data = await client.query(queries.updateEntry, [oldTitle, newTitle, content, email, category])
+        const data = await client.query(queries.updateAuthor, [oldEmail, name, surname, newEmail, image])
         result = data.rowCount
     } catch (err) {
         console.log(err);
@@ -69,11 +69,11 @@ const updateEntry = async (entry) => {
 }
 
 // DELETE
-const deleteEntry = async (title) => {
+const deleteAuthor = async (email) => {
     let client, result;
-    try {
+    try{
         client = await pool.connect();
-        const data = await client.query(queries.deleteEntry, [title])
+        const data = await client.query(queries.deleteAuthor, [email])
         result = data.rowCount
     } catch (err) {
         console.log(err);
@@ -84,12 +84,12 @@ const deleteEntry = async (title) => {
     return result
 }
 
-const entries = {
-    getEntriesByEmail,
-    getALLEntries,
-    createEntry,
-    updateEntry,
-    deleteEntry,
+const authors = {
+    getAuthorByEmail,
+    getAllAuthors,
+    createAuthor,
+    updateAuthor,
+    deleteAuthor
 }
 
-module.exports = entries;
+module.exports = authors;
